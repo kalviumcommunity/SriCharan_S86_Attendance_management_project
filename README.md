@@ -1,9 +1,10 @@
-## Part 4: Data Encapsulation & Attendance Recording Validation
-- Applied encapsulation to `Student` and `Course` classes by making fields `private` and adding public `getters`.
-- Introduced a new `AttendanceRecord` class with `private` fields, a constructor, and `getters` to store attendance data.
-- Implemented basic validation in the `AttendanceRecord` constructor for the attendance status (allowing only "Present" or "Absent").
-- Used an `ArrayList` in `Main.java` to store and display `AttendanceRecord` objects.
-- Demonstrated retrieving IDs using getters (e.g., `student1.getStudentId()`) when creating records.
+## Part 5: Establishing Students, Teaching & Non-Teaching Staff hierarchy
+- Created a base class `Person.java` with common attributes (`id`, `name`), a universal auto-ID generator, and a `displayDetails()` method.
+- Modified `Student.java` to inherit from `Person`, using `super()` to call the parent constructor and overriding `displayDetails()` to add student-specific info (e.g., grade level).
+- Created `Teacher.java` extending `Person`, adding a `subjectTaught` attribute and its own `displayDetails()`.
+- Created `Staff.java` extending `Person`, adding a `role` attribute and its own `displayDetails()`.
+- Demonstrated creation and display of `Student`, `Teacher`, and `Staff` objects in `Main.java`.
+- Updated `AttendanceRecord` creation to use the inherited `getId()` method.
 
 ### How to Run
 1. Navigate to the project root directory.
