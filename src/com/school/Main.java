@@ -1,26 +1,22 @@
 package com.school;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        // Create Students
         Student s1 = new Student("Alice", "Grade 10");
         Student s2 = new Student("Bob", "Grade 11");
 
-        // Create Teacher and Staff
         Teacher t1 = new Teacher("Dr. Smith", "Physics");
         Staff st1 = new Staff("Mr. John", "Librarian");
 
-        // Display Person hierarchy
         System.out.println("=== People in School ===");
         s1.displayDetails();
         s2.displayDetails();
         t1.displayDetails();
         st1.displayDetails();
 
-        // Create Courses
         Course c1 = new Course("Mathematics");
         Course c2 = new Course("Physics");
 
@@ -28,15 +24,28 @@ public class Main {
         c1.displayDetails();
         c2.displayDetails();
 
-        // Attendance log
-        List<AttendanceRecord> attendanceLog = new ArrayList<>();
-        attendanceLog.add(new AttendanceRecord(s1.getId(), c1.getCourseId(), "Present"));
-        attendanceLog.add(new AttendanceRecord(s2.getId(), c2.getCourseId(), "Absent"));
-        attendanceLog.add(new AttendanceRecord(s1.getId(), c2.getCourseId(), "Late")); // Invalid
+        List<AttendanceRecord> records = new ArrayList<>();
+        records.add(new AttendanceRecord(s1.getId(), c1.getCourseId(), "Present"));
+        records.add(new AttendanceRecord(s2.getId(), c2.getCourseId(), "Absent"));
+        records.add(new AttendanceRecord(s1.getId(), c2.getCourseId(), "Present")); 
 
-        System.out.println("\n=== Attendance Records ===");
-        for (AttendanceRecord record : attendanceLog) {
-            record.displayRecord();
+        List<Student> students = new ArrayList<>();
+        students.add(s1);
+        students.add(s2);
+
+        List<Course> courses = new ArrayList<>();
+        courses.add(c1);
+        courses.add(c2);
+
+        FileStorageService storage = new FileStorageService();
+        storage.saveData(students, "students.txt");
+        storage.saveData(courses, "courses.txt");
+        storage.saveData(records, "attendance_log.txt");
+        System.out.println("\nFiles generated: students.txt, courses.txt, attendance_log.txt");
+
+         System.out.println("\n=== Attendance Records ===");
+        for (AttendanceRecord r : records) {
+            r.displayRecord();
         }
     }
 }
