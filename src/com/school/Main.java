@@ -6,7 +6,7 @@ import java.util.List;
 public class Main {
 
     public static void displaySchoolDirectory(List<Person> people) {
-        System.out.println("\n=== School Directory (Polymorphism Demo) ===");
+        System.out.println("\n=== School Directory ===");
         for (Person p : people) {
             p.displayDetails();
             System.out.println();
@@ -17,7 +17,6 @@ public class Main {
 
         Student s1 = new Student("Alice", "Grade 10");
         Student s2 = new Student("Bob", "Grade 11");
-
         Teacher t1 = new Teacher("Dr. Smith", "Physics");
         Staff st1 = new Staff("Mr. John", "Librarian");
 
@@ -36,28 +35,29 @@ public class Main {
         c1.displayDetails();
         c2.displayDetails();
 
-        List<AttendanceRecord> records = new ArrayList<>();
-        records.add(new AttendanceRecord(s1, c1, "Present"));
-        records.add(new AttendanceRecord(s2, c2, "Absent"));
-        records.add(new AttendanceRecord(s1, c2, "Present"));
+        List<Student> allStudents = new ArrayList<>();
+        allStudents.add(s1);
+        allStudents.add(s2);
 
-        System.out.println("\n=== Attendance Records ===");
-        for (AttendanceRecord r : records) {
-            r.displayRecord();
-        }
+        List<Course> allCourses = new ArrayList<>();
+        allCourses.add(c1);
+        allCourses.add(c2);
 
-        List<Student> students = new ArrayList<>();
-        for (Person p : schoolPeople) {
-            if (p instanceof Student) {
-                students.add((Student) p);
-            }
-        }
+        FileStorageService storageService = new FileStorageService();
+        AttendanceService attendanceService = new AttendanceService(storageService);
 
-        FileStorageService storage = new FileStorageService();
-        storage.saveData(students, "students.txt");
-        storage.saveData(List.of(c1, c2), "courses.txt");
-        storage.saveData(records, "attendance_log.txt");
+        attendanceService.markAttendance(s1, c1, "Present");
+        attendanceService.markAttendance(s2, c2, "Absent");
+        attendanceService.markAttendance(s1, c2, "Present");
 
-        System.out.println("\nFiles generated: students.txt, courses.txt, attendance_log.txt");
+        attendanceService.markAttendance(2, 101, "Present", allStudents, allCourses);
+
+        attendanceService.displayAttendanceLog();
+        attendanceService.displayAttendanceLog(s1);
+        attendanceService.displayAttendanceLog(c1);
+
+        attendanceService.saveAttendanceData();
+
+        System.out.println("\nAttendance saved to attendance_log.txt");
     }
 }
