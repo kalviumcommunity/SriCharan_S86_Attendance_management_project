@@ -9,3 +9,5 @@
 1. Navigate to the project root directory.
 2. Compile: `javac src/com/school/*.java`
 3. Run: `java -cp src com.school.Main`
+
+## part -07 done
