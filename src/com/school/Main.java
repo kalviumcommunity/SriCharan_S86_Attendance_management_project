@@ -1,13 +1,10 @@
 package com.school;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Main {
 
-    public static void displaySchoolDirectory(List<Person> people) {
+    public static void displaySchoolDirectory(RegistrationService regService) {
         System.out.println("\n=== School Directory ===");
-        for (Person p : people) {
+        for (Person p : regService.getAllPeople()) {
             p.displayDetails();
             System.out.println();
         }
@@ -15,49 +12,35 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Student s1 = new Student("Alice", "Grade 10");
-        Student s2 = new Student("Bob", "Grade 11");
-        Teacher t1 = new Teacher("Dr. Smith", "Physics");
-        Staff st1 = new Staff("Mr. John", "Librarian");
+        FileStorageService storage = new FileStorageService();
+        RegistrationService regService = new RegistrationService(storage);
+        AttendanceService attendanceService = new AttendanceService(storage, regService);
 
-        List<Person> schoolPeople = new ArrayList<>();
-        schoolPeople.add(s1);
-        schoolPeople.add(s2);
-        schoolPeople.add(t1);
-        schoolPeople.add(st1);
+        Student s1 = regService.registerStudent("Alice", "Grade 10");
+        Student s2 = regService.registerStudent("Bob", "Grade 11");
+        Teacher t1 = regService.registerTeacher("Dr. Smith", "Physics");
+        Staff st1 = regService.registerStaff("Mr. John", "Librarian");
 
-        displaySchoolDirectory(schoolPeople);
+        Course c1 = regService.createCourse("Mathematics");
+        Course c2 = regService.createCourse("Physics");
 
-        Course c1 = new Course("Mathematics");
-        Course c2 = new Course("Physics");
+        displaySchoolDirectory(regService);
 
         System.out.println("=== Registered Courses ===");
         c1.displayDetails();
         c2.displayDetails();
 
-        List<Student> allStudents = new ArrayList<>();
-        allStudents.add(s1);
-        allStudents.add(s2);
-
-        List<Course> allCourses = new ArrayList<>();
-        allCourses.add(c1);
-        allCourses.add(c2);
-
-        FileStorageService storageService = new FileStorageService();
-        AttendanceService attendanceService = new AttendanceService(storageService);
-
-        attendanceService.markAttendance(s1, c1, "Present");
-        attendanceService.markAttendance(s2, c2, "Absent");
-        attendanceService.markAttendance(s1, c2, "Present");
-
-        attendanceService.markAttendance(2, 101, "Present", allStudents, allCourses);
+        attendanceService.markAttendance(s1.getId(), c1.getCourseId(), "Present");
+        attendanceService.markAttendance(s2.getId(), c2.getCourseId(), "Absent");
+        attendanceService.markAttendance(s1.getId(), c2.getCourseId(), "Present");
 
         attendanceService.displayAttendanceLog();
         attendanceService.displayAttendanceLog(s1);
         attendanceService.displayAttendanceLog(c1);
 
+        regService.saveAllRegistrations();
         attendanceService.saveAttendanceData();
 
-        System.out.println("\nAttendance saved to attendance_log.txt");
+        System.out.println("\nData saved: students.txt, teachers.txt, staff.txt, courses.txt, attendance_log.txt");
     }
 }

@@ -7,10 +7,12 @@ public class AttendanceService {
 
     private List<AttendanceRecord> attendanceLog;
     private FileStorageService storageService;
+    private RegistrationService registrationService;
 
-    public AttendanceService(FileStorageService storageService) {
+    public AttendanceService(FileStorageService storageService, RegistrationService registrationService) {
         this.attendanceLog = new ArrayList<>();
         this.storageService = storageService;
+        this.registrationService = registrationService;
     }
 
     public void markAttendance(Student student, Course course, String status) {
@@ -18,28 +20,13 @@ public class AttendanceService {
         attendanceLog.add(record);
     }
 
-    public void markAttendance(int studentId, int courseId, String status,
-                               List<Student> allStudents, List<Course> allCourses) {
-        Student student = findStudentById(studentId, allStudents);
-        Course course = findCourseById(courseId, allCourses);
+    public void markAttendance(int studentId, int courseId, String status) {
+        Student student = registrationService.findStudentById(studentId);
+        Course course = registrationService.findCourseById(courseId);
 
         if (student != null && course != null) {
             markAttendance(student, course, status);
         }
-    }
-
-    private Student findStudentById(int id, List<Student> students) {
-        for (Student s : students) {
-            if (s.getId() == id) return s;
-        }
-        return null;
-    }
-
-    private Course findCourseById(int id, List<Course> courses) {
-        for (Course c : courses) {
-            if (c.getCourseId() == id) return c;
-        }
-        return null;
     }
 
     public void displayAttendanceLog() {
