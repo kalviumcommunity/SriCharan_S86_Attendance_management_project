@@ -37,8 +37,8 @@ public class RegistrationService {
         return st;
     }
 
-    public Course createCourse(String courseName) {
-        Course c = new Course(courseName);
+    public Course createCourse(String courseName, int capacity) {
+        Course c = new Course(courseName, capacity);
         courses.add(c);
         return c;
     }
@@ -68,6 +68,16 @@ public class RegistrationService {
         people.addAll(teachers);
         people.addAll(staffMembers);
         return people;
+    }
+
+    public boolean enrollStudentInCourse(Student student, Course course) {
+        boolean success = course.addStudent(student);
+        if (success) {
+            System.out.println("Enrolled " + student.getName() + " in " + course.getCourseName());
+        } else {
+            System.out.println("Could NOT enroll " + student.getName() + " in " + course.getCourseName() + " — capacity full!");
+        }
+        return success;
     }
 
     public void saveAllRegistrations() {

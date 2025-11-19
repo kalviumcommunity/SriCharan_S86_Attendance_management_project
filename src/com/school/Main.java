@@ -21,18 +21,30 @@ public class Main {
         Teacher t1 = regService.registerTeacher("Dr. Smith", "Physics");
         Staff st1 = regService.registerStaff("Mr. John", "Librarian");
 
-        Course c1 = regService.createCourse("Mathematics");
-        Course c2 = regService.createCourse("Physics");
+        Course c1 = regService.createCourse("Mathematics", 2);
+        Course c2 = regService.createCourse("Physics", 1);
 
         displaySchoolDirectory(regService);
 
-        System.out.println("=== Registered Courses ===");
+        System.out.println("\n=== Course Enrollment ===");
+        regService.enrollStudentInCourse(s1, c1);
+        regService.enrollStudentInCourse(s2, c1);
+        regService.enrollStudentInCourse(s1, c2);
+        regService.enrollStudentInCourse(s2, c2); // should fail
+
+        System.out.println("\n=== Registered Courses After Enrollment ===");
         c1.displayDetails();
         c2.displayDetails();
 
-        attendanceService.markAttendance(s1.getId(), c1.getCourseId(), "Present");
-        attendanceService.markAttendance(s2.getId(), c2.getCourseId(), "Absent");
-        attendanceService.markAttendance(s1.getId(), c2.getCourseId(), "Present");
+        if (c1.getEnrolledStudents().contains(s1)) {
+            attendanceService.markAttendance(s1.getId(), c1.getCourseId(), "Present");
+        }
+        if (c2.getEnrolledStudents().contains(s2)) {
+            attendanceService.markAttendance(s2.getId(), c2.getCourseId(), "Absent");
+        }
+        if (c2.getEnrolledStudents().contains(s1)) {
+            attendanceService.markAttendance(s1.getId(), c2.getCourseId(), "Present");
+        }
 
         attendanceService.displayAttendanceLog();
         attendanceService.displayAttendanceLog(s1);
